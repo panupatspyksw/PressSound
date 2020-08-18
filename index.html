@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js"></script>
+    <script type="text/javascript" src="paper-full.js"></script>
+    <script>
+        alert("Please press the keyboard for play!");
+    </script>
+    <script type="text/paperscript" canvas="canvas">
+    
+
+    var circles = [];
+    var arraykeychar = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+    var colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D', '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC', '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC', '#66664D'];
+    var arraykeyID = arraykeyID();
+    var sounds = [];
+
+    for (var s = 1; s<=26; s++){
+        var txts = String(s);
+        sounds.push(new Howl({src: ['sounds/'+txts+'.mp3']}));
+    };
+
+    function arraykeyID() {
+        var arraykeyid = [];
+        for(var num = 65; num<=90; num++)
+        {
+            arraykeyid.push(num);
+        }
+        return arraykeyid;
+    }
+
+    function onKeyDown(event) {
+        if (sounds[arraykeychar.indexOf(event.key)] !== undefined)
+        {
+        // console.log("not undefined")
+        sounds[arraykeychar.indexOf(event.key)].play();
+        var maxPoint = new Point(view.size.width, view.size.height);
+        var randomPoint = Point.random();
+        var point = maxPoint * randomPoint;
+        var newCircle = new Path.Circle(point, 500);
+        newCircle.fillColor = colorArray[arraykeychar.indexOf(event.key)];
+        circles.push(newCircle);
+        }
+    }
+
+    function onFrame(event) {
+        for(var i = 0; i<circles.length; i++)
+        {
+            circles[i].fillColor.hue += 1;
+            circles[i].scale(.9);
+            if(circles[i].area < 1)
+            {
+            circles[i].remove(); // remove the circle from the canvas
+            circles.splice(i, 1); // remove the circle from the array
+            // console.log(circles);
+            }
+        }
+    }
+
+    </script>
+<title>Trapping Music</title>
+</head>
+<body>
+    <canvas id="canvas" resize stats hidpi="off"></canvas>
+</body>
+</html>
